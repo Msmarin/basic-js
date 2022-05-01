@@ -13,32 +13,40 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
- function transform(arr) {
-     if (!Array.isArray(arr)){ throw new Error('\'arr\' parameter must be an instance of the Array!')};
-    // return arr.map(i=>(arr.filter(i=>(Number(i)));
-for (let i = 0; i < arr.length; i++){
-    if(typeof (arr[i])==='undefined') arr.splice(i,1);
-    if(arr[i]=arr[i+1]) arr.splice(i,1); 
-    if(arr[i]==('--discard-next')){
-    arr.splice(i,2);    
-    };
-    if(arr[0]==('--discard-prev')){
-    arr.splice(0,1)   
-    };
-    if(arr[i]==('--discard-prev')){
-    arr.splice(i-1,2)   
-    };
-    
-    if(arr[i]==('--double-next')){
-        arr[i]=arr[i+1];
-    }; 
-    if(arr[i]==('--double-prev')){
-        arr[i]=arr[i-1];
+function transform(arr) {
+    if (!Array.isArray(arr)) { throw new Error('\'arr\' parameter must be an instance of the Array!') };
+    let newArr = arr.slice();
+    for (let i = 0; i < newArr.length; i++) {
+        if (typeof (newArr[i]) === 'string' || typeof (newArr[i]) === 'number') {
+            if (newArr[0] == ('--discard-prev')) {
+                newArr.splice(0, 1)};
+            if (newArr[0] == ('--double-prev')) {
+                newArr.splice(0, 1)};
+            if (newArr[i] == ('--discard-next') && newArr[i + 2] == ('--double-prev')) {
+                newArr.splice(i, 3)}
+            if (newArr[i] == ('--discard-next') && newArr[i + 2] == ('--discard-prev')) {
+                newArr.splice(i, 3)}
+            if (newArr[newArr.length - 1] == ('--discard-next')) {
+                newArr.splice(-1, 1)};
+            if (newArr[newArr.length - 1] == ('--double-next')) {
+                newArr.splice(-1, 1)};
+            if (newArr[i] == ('--discard-next')) {
+                newArr.splice(i, 2)};
+            if (newArr[i] == ('--discard-prev')) {
+                newArr.splice(i - 1, 2)};
+            if (newArr[i] == ('--double-next')) {
+                newArr[i] = newArr[i + 1] };
+            if (newArr[i] == ('--double-prev')) {
+                newArr[i] = newArr[i - 1]; }
+        }
     }
+
+    return newArr;
 }
-return arr;
-    }   
+
+
+
 
 module.exports = {
-  transform
+    transform
 };
